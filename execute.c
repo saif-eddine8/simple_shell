@@ -1,9 +1,9 @@
 #include "shell.h"
 /**
  * execute_cmd - command
- * @command: An array of command arguments
- * @argv: An array of arguments for the shell program
- * @idx: An index indicating the position of the command
+ * @command: is An array of command arguments
+ * @argv: is An array of arguments for the shell program
+ * @idx: s a index indicating the position of the command
  * Return: 127.
  */
 int execute_cmd(char **command, char **argv, int idx)
