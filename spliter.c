@@ -1,7 +1,7 @@
 #include "shell.h"
 /**
- * spliter - Split a string into an array of tokens
- * @line: The string to split
+ * spliter - to Split a string into an array of tokens
+ * @line: is The string to split
  * Return: An array of tokens.
  */
 char **spliter(char *line)
