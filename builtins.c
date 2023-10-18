@@ -1,8 +1,8 @@
 #include "shell.h"
 /**
  * my_printenv - to Print the environment variables
- * @command: An array of command arguments
- * @status: A pointer to the status code
+ * @command: is An array of command arguments
+ * @status: is  A pointer to the status code
  */
 void my_printenv(char **command, int *status)
 {
@@ -17,9 +17,9 @@ void my_printenv(char **command, int *status)
 	free_2(command);
 }
 /**
- * my_exit_shell - Exit the shell
- * @command: An array of command arguments
- * @status: A pointer to the status code
+ * my_exit_shell - to Exit the shell
+ * @command: is An array of command arguments
+ * @status: is A pointer to the status code
  */
 void my_exit_shell(char **command, int *status)
 {
