@@ -1,6 +1,6 @@
 #include "shell.h"
 /**
- * my_printenv - Print the environment variables
+ * my_printenv - to Print the environment variables
  * @command: An array of command arguments
  * @status: A pointer to the status code
  */
