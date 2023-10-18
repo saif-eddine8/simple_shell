@@ -1,108 +1,59 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
 #ifndef SHELL_H
 #define SHELL_H
 
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
+#define DELIM " \n\t"
+
 extern char **environ;
-size_t custom_strlen(const char *str);
 
-// 'print_environment' function is used as the built-in 'env' version.
-void print_environment() {
-	char **env = environ;
+/**
+ * struct list_dir - singly linked list
+ * @dir: directory
+ * @next: points to the next node
+ * Description: singly linked list node structure
+ */
+typedef struct list_dir
+{
+	char *dir;
+	struct list_dir *next;
+} list_dir;
 
-	while (*env) {
-		printf("%s\n", *env);
-		env++;
-	}
-}
 
-ssize_t custom_getline(char **lineptr, size_t *n, FILE *stream) {
-   if (lineptr == NULL || n == NULL) {
-		return -1; // Return an error code for invalid arguments
-	}
+/* input_line.c */
+char *get_line(void);
 
-	size_t line_length = 0;
-	char *line = *lineptr;
-	int buffer_size = 128; // Initial buffer size
+/* spliter.c */
+char **spliter(char *line);
 
-	while (1) {
-		if (line_length >= *n) {
-			// Increase the size of the line buffer
-			buffer_size *= 2;
-			char *new_line = (char *)realloc(*lineptr, buffer_size);
-			if (new_line == NULL) {
-				free(*lineptr); // Free the old buffer
-				*lineptr = NULL; // Set to NULL to avoid double freeing
-				return -1; // Return an error code for memory allocation failure
-			}
-			*lineptr = new_line;
-			*n = buffer_size;
-			line = *lineptr;
-		}
+/* execute.c */
+int execute_cmd(char **command, char **argv, int idx);
 
-		char c;
-		ssize_t bytes_read = read(fileno(stream), &c, 1);
+/* getpath.c */
+list_dir *build_path_list(void);
+char *getpath(char *command);
 
-		if (bytes_read < 0) {
-			return -1; // Return an error code for reading failure
-		} else if (bytes_read == 0) {
-			// End of file (Ctrl+D)
-			if (line_length == 0) {
-				return 0;
-			} else {
-				line[line_length] = '\0';
-				return line_length;
-			}
-		} else {
-			line[line_length] = c;
-			line_length++;
-			if (c == '\n') {
-				line[line_length] = '\0';
-				return line_length;
-			}
-		}
-	}
-}
+/* getenv.c*/
+char *my_getenv(char *variable);
 
-void free_dynamically_allocated_memory(char *line) {
-	if (line != NULL) {
-		free(line);
-	}
-}
+/* bultins */
+void my_printenv(char **command, int *status);
+void my_exit_shell(char **command, int *status);
 
-char *custom_strtok(char *str, const char *delim) {
-	static char *pos = NULL;  // Static variable to maintain position
+/* tools.c */
+char *_itoa(int n);
+void free_2(char **array);
+void printError(char *name, int idx, char *command);
 
-	if (str != NULL) {
-		pos = str;
-	}
-
-	if (pos == NULL || *pos == '\0') {
-		return NULL;
-	}
-
-	// Skip leading delimiters
-	while (*pos != '\0' && strchr(delim, *pos) != NULL) {
-		pos++;
-	}
-
-	if (*pos == '\0') {
-		return NULL;
-	}
-
-	char *token = pos;
-
-	while (*pos != '\0' && strchr(delim, *pos) == NULL) {
-		pos++;
-	}
-
-	if (*pos != '\0') {
-		*pos = '\0';
-		pos++;
-	}
-
-	return token;
-}
+/* linked_list */
+list_dir *add_node_end(list_dir **head, const char *str);
+void free_list_dir(list_dir *head);
 
 #endif
